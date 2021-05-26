@@ -1,0 +1,18 @@
+{
+  "name": "palasthotel/migrate-to-gutenberg",
+  "description": "Migrate pre Gutenberg contents to gutenberg blocks",
+  "autoload": {
+    "psr-4": {
+      "Palasthotel\\WordPress\\MigrateToGutenberg\\": "classes"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/palasthotel/wp-components.git"
+    }
+  ],
+  "require": {
+    "palasthotel/wp-components": "0.0.9"
+  }
+}
