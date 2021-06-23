@@ -7,16 +7,11 @@ namespace Palasthotel\WordPress\MigrateToGutenberg\Migrations;
 use Palasthotel\WordPress\MigrateToGutenberg\Interfaces\Migration;
 use Palasthotel\WordPress\MigrateToGutenberg\Interfaces\ShortcodeTransformation;
 use Palasthotel\WordPress\MigrateToGutenberg\Plugin;
-use Palasthotel\WordPress\MigrateToGutenberg\Transformations\CampactBlockquoteTransformation;
-use Palasthotel\WordPress\MigrateToGutenberg\Transformations\CampactContentButtonTransformation;
-use Palasthotel\WordPress\MigrateToGutenberg\Transformations\CampactFlickrTransformation;
-use Palasthotel\WordPress\MigrateToGutenberg\Transformations\CampactOembedTransformation;
-use Palasthotel\WordPress\MigrateToGutenberg\Transformations\CampactSharingBarTransformation;
-use Palasthotel\WordPress\MigrateToGutenberg\Transformations\FreeContentTransformation;
 use Palasthotel\WordPress\MigrateToGutenberg\Transformations\VCColumnTransformation;
 use Palasthotel\WordPress\MigrateToGutenberg\Transformations\VCInnerColumnTransformation;
 use Palasthotel\WordPress\MigrateToGutenberg\Transformations\VCInnerRowTransformation;
 use Palasthotel\WordPress\MigrateToGutenberg\Transformations\VCRowTransformation;
+use Palasthotel\WordPress\MigrateToGutenberg\Transformations\VCSingleImageTransformation;
 
 class ShortcodesMigration implements Migration {
 
@@ -67,8 +62,9 @@ class ShortcodesMigration implements Migration {
 
 		$likeTags = implode( " OR ", $tags );
 
+		$migrationsTable = Plugin::instance()->dbMigrations->table;
 		$query = "SELECT ID FROM " . $wpdb->posts . " WHERE 
-		($likeTags) 
+		(($likeTags) OR ( ID IN (SELECT post_id FROM $migrationsTable))) 
 		AND (post_status ='publish' or post_status ='private' or post_status ='draft' OR post_status = 'future')
 		";
 
@@ -166,6 +162,7 @@ class ShortcodesMigration implements Migration {
 				new VCInnerRowTransformation(),
 				new VCColumnTransformation(),
 				new VCInnerColumnTransformation(),
+				new VCSingleImageTransformation(),
 			] );
 		}
 

@@ -14,6 +14,6 @@ class VCColumnTransformation implements ShortcodeTransformation {
 
 	function transform($attrs, $content = ""): string {
 
-		return "<!-- wp:column -->\n<div class=\"wp-block-column\">$content</div>\n<!-- /wp:column -->";
+		return "<!-- wp:column -->\n<div class=\"wp-block-column\">$content</div>\n<!-- /wp:column -->\n\n";
 	}
 }

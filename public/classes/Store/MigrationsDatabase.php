@@ -11,27 +11,40 @@ use Palasthotel\WordPress\MigrateToGutenberg\Components\Database;
 class MigrationsDatabase extends Database {
 
 	function init() {
-		$this->table = "m2g_migrations";
+		$this->table = $this->wpdb->prefix."m2g_migrations";
 	}
 
-	public function setPostRecoveryRevisionId($post_id, $revision_id){
+	public function setPostContentBackup($post_id, $content){
 		return $this->wpdb->insert(
 			$this->table,
 			[
 				"post_id" => $post_id,
-				"revision_id" => $revision_id
+				"post_content_backup" => $content
 			],
-			["%d", "%d"]
+			["%d", "%s"]
 		);
 	}
 
-	public function getPostRecoveryRevisionId($post_id){
-		return intval($this->wpdb->get_var(
+	/**
+	 * @param $post_id
+	 *
+	 * @return string|null
+	 */
+	public function getPostContentBackup($post_id){
+		return $this->wpdb->get_var(
 			$this->wpdb->prepare(
-				"SELECT revision_id FROM $this->table WHERE post_id = %d",
+				"SELECT post_content_backup FROM $this->table WHERE post_id = %d",
 				$post_id
 			)
-		));
+		);
+	}
+
+	public function deletePostContentBackup($post_id){
+		return $this->wpdb->delete(
+			$this->table,
+			["post_id" => $post_id],
+			["%d"]
+		);
 	}
 
 	public function createTables() {
@@ -39,10 +52,8 @@ class MigrationsDatabase extends Database {
 		dbDelta("CREATE TABLE IF NOT EXISTS $this->table
 			(
 			 post_id bigint(20) unsigned NOT NULL,
-			 revision_id bigint (20) unsigned NOT NULL,
-			 primary key restore_post_revision (post_id, revision_id),
-			 key (post_id),
-			 key (revision_id)
+			 post_content_backup TEXT,
+			 primary key (post_id)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 	}
 }

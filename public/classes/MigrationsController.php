@@ -36,4 +36,17 @@ class MigrationsController extends Components\Component {
 	public function getMigrations(): array {
 		return $this->migrations;
 	}
+
+	/**
+	 * @param $content
+	 *
+	 * @return string
+	 */
+	public function migrate($content){
+		$migratedContent = $content;
+		foreach ($this->migrations as $migration){
+			$migratedContent = $migration->transform($migratedContent, true);
+		}
+		return $migratedContent;
+	}
 }

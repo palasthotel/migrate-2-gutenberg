@@ -19,9 +19,12 @@ abstract class AbsShortcodeTransformation implements ShortcodeTransformation {
 			}, array_keys( $attrs ) );
 			$data = implode(" ", $list);
 		}
+		if(!empty($data)){
+			$data = " $data ";
+		}
 
 		$tag = $this->tag();
-		$code = (!empty($content)) ? "[{$tag} {$data} ]{$content}[/{$tag}]" : "[{$tag} {$data} ]";
+		$code = (!empty($content)) ? "[{$tag}{$data}]{$content}[/{$tag}]" : "[{$tag} {$data} ]";
 		return "<!-- wp:shortcode -->\n$code\n<!-- /wp:shortcode -->\n\n";
 	}
 }

@@ -3,7 +3,6 @@
 namespace Palasthotel\WordPress\MigrateToGutenberg;
 
 use Palasthotel\WordPress\MigrateToGutenberg\Store\MigrationsDatabase;
-use Palasthotel\WordPress\MigrateToGutenberg\Views\Menu;
 
 /**
  * Plugin Name: Migrate 2 Gutenberg
@@ -27,6 +26,7 @@ require_once dirname( __FILE__ ) . "/vendor/autoload.php";
  * @property Menu menu
  * @property MigrationsController $migrationController
  * @property MigrationsDatabase dbMigrations
+ * @property Actions actions
  */
 class Plugin extends Components\Plugin {
 
@@ -42,8 +42,13 @@ class Plugin extends Components\Plugin {
 
 		$this->dbMigrations        = new MigrationsDatabase();
 		$this->migrationController = new MigrationsController( $this );
+		$this->actions             = new Actions( $this );
 
 		$this->menu = new Menu( $this );
+
+		if(WP_DEBUG){
+			$this->dbMigrations->createTables();
+		}
 	}
 
 	public function onSiteActivation() {

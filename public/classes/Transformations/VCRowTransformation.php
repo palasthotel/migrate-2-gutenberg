@@ -18,7 +18,7 @@ class VCRowTransformation implements ShortcodeTransformation {
 			substr_count($content,"[vc_row_inner]") > 1 ||
 			substr_count($content,"[vc_column_inner]") > 1
 		){
-			return "<!-- wp:columns -->\n<div class=\"wp-block-columns\">$content</div>\n<!-- /wp:columns -->";
+			return "<!-- wp:columns -->\n<div class=\"wp-block-columns\">$content</div>\n<!-- /wp:columns -->\n\n";
 		}
 		return str_replace(
 			[

@@ -26,14 +26,10 @@ class PostMigrationDiff extends Component {
 			wp_die("Post not found.");
 		}
 
-		$content = $post->post_content;
+		$backupContent = $this->plugin->dbMigrations->getPostContentBackup($post->ID);
+		$content = is_string($backupContent) ? $backupContent : $post->post_content;
 
-		$migrations = $this->plugin->migrationController->getMigrations();
-
-		$migratedContent = $post->post_content;
-		foreach ($migrations as $migration){
-			$migratedContent = $migration->transform($migratedContent, true);
-		}
+		$migratedContent = $this->plugin->migrationController->migrate($content);
 
 		echo "<div style='display: flex'>";
 		$style = "width: 50%; height: 90vh";

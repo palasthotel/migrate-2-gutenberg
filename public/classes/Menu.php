@@ -1,11 +1,13 @@
 <?php
 
 
-namespace Palasthotel\WordPress\MigrateToGutenberg\Views;
+namespace Palasthotel\WordPress\MigrateToGutenberg;
 
 
 use Palasthotel\WordPress\MigrateToGutenberg\Components\Component;
-use Palasthotel\WordPress\MigrateToGutenberg\Plugin;
+use Palasthotel\WordPress\MigrateToGutenberg\Views\PostMigrationDiff;
+use Palasthotel\WordPress\MigrateToGutenberg\Views\PostMigrationPreview;
+use Palasthotel\WordPress\MigrateToGutenberg\Views\PostMigrationsTable;
 
 /**
  * @property PostMigrationDiff $diff
@@ -82,6 +84,9 @@ class Menu extends Component {
             .column-post_title {
                 width: 25%;
             }
+            .column-status {
+                width: 60px;
+            }
 
             .column-migrations ul {
                 margin: 0;
@@ -94,7 +99,19 @@ class Menu extends Component {
         $migrations = $this->plugin->migrationController->getMigrations();
         $table      = new PostMigrationsTable( $migrations );
         $table->prepare_items();
+        $table->views();
+		//$table->search_box("Search", "search");
         $table->display();
+
+        ?>
+        <script>
+            jQuery("body").on("click","[data-auto-reload-link]", function(){
+                setTimeout(function(){
+                    window.location.reload();
+                }, 600);
+            });
+        </script>
+        <?php
 
 	}
 

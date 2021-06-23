@@ -25,14 +25,7 @@ class PostMigrationPreview extends Component {
 			return $content;
 		}
 
-		$migrations = $this->plugin->migrationController->getMigrations();
-
-		$migratedContent = $content;
-		foreach ($migrations as $migration){
-			$migratedContent = $migration->transform($migratedContent, true);
-		}
-
-		return $migratedContent;
+		return $this->plugin->migrationController->migrate($content);
 	}
 
 }
