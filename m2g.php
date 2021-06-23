@@ -11,12 +11,14 @@
  * Domain Path:       /plugin/languages
  */
 
-include dirname( __FILE__ ) . "/public/migrate-to-gutenberg.php";
+use Palasthotel\WordPress\MigrateToGutenberg\Plugin;
+
+include dirname( __FILE__ ) . "/public/m2g.php";
 
 register_activation_hook(__FILE__, function($multisite){
-	\Palasthotel\WordPress\MigrateToGutenberg\Plugin::instance()->onActivation($multisite);
+	Plugin::instance()->onActivation($multisite);
 });
 
 register_deactivation_hook(__FILE__, function($multisite){
-	\Palasthotel\WordPress\MigrateToGutenberg\Plugin::instance()->onDeactivation($multisite);
+	Plugin::instance()->onDeactivation($multisite);
 });

@@ -57,8 +57,11 @@ class PostMigrationsTable extends WP_List_Table {
 				break;
 			case "actions":
 				echo "<p style='line-height: 1.6rem; margin:0;'>";
-				echo "<a href='#preview'>Preview</a><br/>";
-				echo "<a href='#run'>Run</a>";
+				$diffUrl = PostMigrationDiff::getUrl($item->post_id);
+				echo "<a href='$diffUrl' target='_blank'>Diff</a><br/>";
+				$previewUrl = PostMigrationPreview::getUrl($item->post_id);
+				echo "<a href='$previewUrl' target='_blank'>Preview</a><br/>";
+				echo "<a href='#run'>Transform</a>";
 				echo "</p>";
 				break;
 		}

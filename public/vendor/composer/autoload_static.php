@@ -4,13 +4,12 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit7b423211cb3beb15cf94f8be36377bf0
+class ComposerStaticInit5fd60179f05628c12cd299ca8181536d
 {
     public static $prefixLengthsPsr4 = array (
         'P' => 
         array (
             'Palasthotel\\WordPress\\MigrateToGutenberg\\' => 41,
-            'Palasthotel\\WordPress\\' => 22,
         ),
     );
 
@@ -18,10 +17,6 @@ class ComposerStaticInit7b423211cb3beb15cf94f8be36377bf0
         'Palasthotel\\WordPress\\MigrateToGutenberg\\' => 
         array (
             0 => __DIR__ . '/../..' . '/classes',
-        ),
-        'Palasthotel\\WordPress\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/palasthotel/wp-components/src',
         ),
     );
 
@@ -32,9 +27,9 @@ class ComposerStaticInit7b423211cb3beb15cf94f8be36377bf0
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit7b423211cb3beb15cf94f8be36377bf0::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit7b423211cb3beb15cf94f8be36377bf0::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit7b423211cb3beb15cf94f8be36377bf0::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5fd60179f05628c12cd299ca8181536d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5fd60179f05628c12cd299ca8181536d::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit5fd60179f05628c12cd299ca8181536d::$classMap;
 
         }, null, ClassLoader::class);
     }

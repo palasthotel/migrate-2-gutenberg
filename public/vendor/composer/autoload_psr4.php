@@ -7,5 +7,4 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Palasthotel\\WordPress\\MigrateToGutenberg\\' => array($baseDir . '/classes'),
-    'Palasthotel\\WordPress\\' => array($vendorDir . '/palasthotel/wp-components/src'),
 );

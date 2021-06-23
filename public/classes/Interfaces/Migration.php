@@ -14,5 +14,5 @@ interface Migration {
 	public function analyze($post_id);
 
 	// run the migration
-	public function run($post_id, bool $dryRun);
+	public function transform(string $post_content, bool $dryRun): string;
 }

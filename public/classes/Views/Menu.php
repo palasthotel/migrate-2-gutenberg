@@ -4,21 +4,27 @@
 namespace Palasthotel\WordPress\MigrateToGutenberg\Views;
 
 
-use Palasthotel\WordPress\MigrateToGutenberg\_Component;
-use const Palasthotel\WordPress\MigrateToGutenberg\DOMAIN;
+use Palasthotel\WordPress\MigrateToGutenberg\Components\Component;
+use Palasthotel\WordPress\MigrateToGutenberg\Plugin;
 
-class Menu extends _Component {
+/**
+ * @property PostMigrationDiff $diff
+ * @property PostMigrationPreview preview
+ */
+class Menu extends Component {
 
-	const SLUG = "migrate-to-gutenberg";
+	const SLUG = "m2g";
 
 	function onCreate() {
 		add_action( 'admin_menu', [ $this, 'admin_menu' ] );
+		$this->diff = new PostMigrationDiff($this->plugin);
+		$this->preview = new PostMigrationPreview($this->plugin);
 	}
 
 	public function admin_menu() {
 		add_management_page(
-			__( 'Migrate to Gutenberg', DOMAIN ),
-			__( 'Migrate to Gutenberg', DOMAIN ),
+			__( 'Migrate to Gutenberg', Plugin::DOMAIN ),
+			__( 'Migrate to Gutenberg', Plugin::DOMAIN ),
 			'manage_options',
 			self::SLUG,
 			array( $this, 'render' )
@@ -85,7 +91,7 @@ class Menu extends _Component {
             }
         </style>
         <?php
-        $migrations = $this->plugin->migrationHandler->getMigrations();
+        $migrations = $this->plugin->migrationController->getMigrations();
         $table      = new PostMigrationsTable( $migrations );
         $table->prepare_items();
         $table->display();
@@ -93,7 +99,7 @@ class Menu extends _Component {
 	}
 
 	public function renderMigrationsList() {
-		$migrations = $this->plugin->migrationHandler->getMigrations();
+		$migrations = $this->plugin->migrationController->getMigrations();
 		foreach ( $migrations as $migration ) {
 			echo "<h2>" . $migration->id() . "</h2>";
 			$migration->description();

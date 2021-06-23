@@ -5,9 +5,9 @@ namespace Palasthotel\WordPress\MigrateToGutenberg;
 
 
 use Palasthotel\WordPress\MigrateToGutenberg\Interfaces\Migration;
-use Palasthotel\WordPress\MigrateToGutenberg\Migrations\WPBakeryMigration;
+use Palasthotel\WordPress\MigrateToGutenberg\Migrations\ShortcodesMigration;
 
-class MigrationHandler extends _Component {
+class MigrationsController extends Components\Component {
 
 	/**
 	 * @var Migration[]
@@ -15,9 +15,9 @@ class MigrationHandler extends _Component {
 	private array $migrations = [];
 
 	function onCreate() {
-		add_action("admin_init", function(){
+		add_action("init", function(){
 			do_action(Plugin::ACTION_REGISTER_MIGRATIONS, $this);
-			$this->register(new WPBakeryMigration());
+			$this->register(new ShortcodesMigration());
 		});
 	}
 
