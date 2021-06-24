@@ -121,7 +121,7 @@ class PostMigrationsTable extends WP_List_Table {
 					$rollbackUrl = Plugin::instance()->actions->getRunRollbackUrl($item->post_id);
 					echo "<a href='$rollbackUrl' data-auto-reload-link target='_blank'>Rollback</a><br/>";
 					$updateUrl = Plugin::instance()->actions->getRunUpdateUrl($item->post_id);
-					echo "<a href='$updateUrl' target='_blank'>Update transform</a>";
+					echo "<a href='$updateUrl' data-auto-reload-link target='_blank'>Update transform</a>";
 				} else {
 					$transformUrl = Plugin::instance()->actions->getRunTransformationsUrl($item->post_id);
 					echo "<a href='$transformUrl' data-auto-reload-link target='_blank'>Transform</a>";
