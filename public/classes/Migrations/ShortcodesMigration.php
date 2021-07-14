@@ -7,6 +7,7 @@ namespace Palasthotel\WordPress\MigrateToGutenberg\Migrations;
 use Palasthotel\WordPress\MigrateToGutenberg\Interfaces\Migration;
 use Palasthotel\WordPress\MigrateToGutenberg\Interfaces\ShortcodeTransformation;
 use Palasthotel\WordPress\MigrateToGutenberg\Plugin;
+use Palasthotel\WordPress\MigrateToGutenberg\Transformations\VCColumnTextTransformation;
 use Palasthotel\WordPress\MigrateToGutenberg\Transformations\VCColumnTransformation;
 use Palasthotel\WordPress\MigrateToGutenberg\Transformations\VCInnerColumnTransformation;
 use Palasthotel\WordPress\MigrateToGutenberg\Transformations\VCInnerRowTransformation;
@@ -163,6 +164,7 @@ class ShortcodesMigration implements Migration {
 				new VCColumnTransformation(),
 				new VCInnerColumnTransformation(),
 				new VCSingleImageTransformation(),
+				new VCColumnTextTransformation(),
 			] );
 		}
 
