@@ -68,11 +68,11 @@ class PostMigrationsTable extends WP_List_Table {
 		$baseUrl = remove_query_arg(["status", "post_id"],$_SERVER['REQUEST_URI']);
 		switch ( $column_name ) {
 			case "post_id":
-				$url = add_query_arg(["post_id" => $item->post_id],$baseUrl);
+				$url = get_edit_post_link($item->post_id);
 				echo "<a href='$url'>$item->post_id</a>";
 				break;
 			case "post_title":
-				$url = get_edit_post_link($item->post_id, );
+				$url = get_permalink($item->post_id);
 				echo "<a href='$url'>".get_the_title($item->post_id)."</a>";
 				break;
 			case "migrations":
