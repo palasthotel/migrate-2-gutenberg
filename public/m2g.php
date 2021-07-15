@@ -2,6 +2,7 @@
 
 namespace Palasthotel\WordPress\MigrateToGutenberg;
 
+use Palasthotel\WordPress\MigrateToGutenberg\Components\Component;
 use Palasthotel\WordPress\MigrateToGutenberg\Store\MigrationsDatabase;
 
 /**
@@ -26,6 +27,7 @@ require_once dirname( __FILE__ ) . "/vendor/autoload.php";
  * @property Menu menu
  * @property MigrationsController $migrationController
  * @property MigrationsDatabase dbMigrations
+ * @property Ajax $ajax
  * @property Actions actions
  */
 class Plugin extends Components\Plugin {
@@ -43,10 +45,16 @@ class Plugin extends Components\Plugin {
 		$this->dbMigrations        = new MigrationsDatabase();
 		$this->migrationController = new MigrationsController( $this );
 		$this->actions             = new Actions( $this );
+		$this->ajax                = new Ajax( $this );
+
+		// wp cli
+		if ( class_exists( "\WP_CLI" ) ) {
+			\WP_CLI::add_command( 'm2g', new CommandLine( $this ) );
+		}
 
 		$this->menu = new Menu( $this );
 
-		if(WP_DEBUG){
+		if ( WP_DEBUG ) {
 			$this->dbMigrations->createTables();
 		}
 	}

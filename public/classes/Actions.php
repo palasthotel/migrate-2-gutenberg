@@ -4,111 +4,84 @@
 namespace Palasthotel\WordPress\MigrateToGutenberg;
 
 
+use Palasthotel\WordPress\MigrateToGutenberg\Components\Component;
+use WP_Error;
 use WP_Post;
 
-class Actions extends Components\Component {
+class Actions extends Component {
 
-	const RUN_TRANSFORMATIONS = "run_transformations";
-	const RUN_ROLLBACK = "run_rollback";
-	const RUN_UPDATE = "run_update";
+	/**
+	 * @param string|int|WP_Post $post
+	 *
+	 * @return int|WP_Error
+	 */
+	public function migrate( $post ) {
+		$post            = get_post( $post );
 
-	public function onCreate() {
-		parent::onCreate();
-		add_action('wp_ajax_'.self::RUN_TRANSFORMATIONS, [$this, 'run_transformations']);
-		add_action('wp_ajax_'.self::RUN_ROLLBACK, [$this, 'run_rollback']);
-		add_action('wp_ajax_'.self::RUN_UPDATE, [$this, 'run_update']);
-	}
+		if(!($post instanceof WP_Post)){
+			return new WP_Error(
+				404,
+				"No post found."
+			);
+		}
 
-	public function getRunTransformationsUrl($post_id){
-		return admin_url("/admin-ajax.php?post_id=$post_id&action=".self::RUN_TRANSFORMATIONS);
-	}
+		$content = $this->plugin->dbMigrations->getPostContentBackup( $post->ID );
 
-	public function getRunRollbackUrl($post_id){
-		return admin_url("/admin-ajax.php?post_id=$post_id&action=".self::RUN_ROLLBACK);
-	}
+		if(null === $content){
+			// new migration
+			$migratedContent = $this->plugin->migrationController->migrate( $post->post_content );
+			$this->plugin->dbMigrations->setPostContentBackup( $post->ID, $post->post_content );
 
-	public function getRunUpdateUrl($post_id){
-		return admin_url("/admin-ajax.php?post_id=$post_id&action=".self::RUN_UPDATE);
+			return wp_update_post( [
+				"ID"           => $post->ID,
+				"post_content" => $migratedContent,
+			] );
+		}
+
+		// update migration
+		$migratedContent = $this->plugin->migrationController->migrate( $content );
+		return wp_update_post( [
+			"ID"           => $post->ID,
+			"post_content" => $migratedContent,
+		] );
+
 	}
 
 	/**
-	 * @return WP_Post
+	 * @param string|int|WP_Post $post
+	 *
+	 * @return int|WP_Error
 	 */
-	private function securityCheck(): WP_Post {
-		if(!isset($_GET["post_id"])){
-			exit;
-		}
-		$postId = intval($_GET["post_id"]);
-		$post = get_post($postId);
+	public function rollback($post){
+
+		$post = get_post($post);
+
 		if(!($post instanceof WP_Post)){
-			exit;
+			return new WP_Error(
+				404,
+				"No post found."
+			);
 		}
-
-		if(!current_user_can("edit_posts")){
-			exit;
-		}
-		return $post;
-	}
-
-	public function run_transformations(){
-		$post = $this->securityCheck();
-
-		$migratedContent = $this->plugin->migrationController->migrate($post->post_content);
-		$this->plugin->dbMigrations->setPostContentBackup($post->ID, $post->post_content);
-
-		$success = wp_update_post([
-			"ID" => $post->ID,
-			"post_content" => $migratedContent,
-		]);
-
-		if($success instanceof \WP_Error){
-			wp_die($success);
-		}
-
-		wp_redirect(get_edit_post_link($post->ID, ''));
-
-		exit;
-	}
-
-	public function run_update(){
-		$post = $this->securityCheck();
-
-		$content = $this->plugin->dbMigrations->getPostContentBackup($post->ID);
-		$migratedContent = $this->plugin->migrationController->migrate($content);
-
-		$success = wp_update_post([
-			"ID" => $post->ID,
-			"post_content" => $migratedContent,
-		]);
-
-		if($success instanceof \WP_Error){
-			wp_die($success);
-		}
-
-		wp_redirect(get_edit_post_link($post->ID, ''));
-
-		exit;
-	}
-
-	public function run_rollback(){
-		$post = $this->securityCheck();
-
 
 		$backup = $this->plugin->dbMigrations->getPostContentBackup($post->ID);
 
-		$success = wp_update_post([
+		if ( null === $backup ) {
+			return new WP_Error(
+				404,
+				"There is no post content backup. Only posts that were already migrated can be restored."
+			);
+		}
+
+		$success =  wp_update_post([
 			"ID" => $post->ID,
 			"post_content" => $backup,
 		]);
 
-		if($success instanceof \WP_Error){
-			wp_die($success);
+		if(!($success instanceof WP_Error) && $success > 0){
+			$this->plugin->dbMigrations->deletePostContentBackup($post->ID);
 		}
 
-		$this->plugin->dbMigrations->deletePostContentBackup($post->ID);
-
-		wp_redirect(get_edit_post_link($post->ID, ''));
-
-		exit;
+		return $success;
 	}
+
 }

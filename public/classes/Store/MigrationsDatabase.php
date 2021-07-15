@@ -15,7 +15,7 @@ class MigrationsDatabase extends Database {
 	}
 
 	public function setPostContentBackup($post_id, $content){
-		return $this->wpdb->insert(
+		return $this->wpdb->replace(
 			$this->table,
 			[
 				"post_id" => $post_id,
@@ -39,6 +39,10 @@ class MigrationsDatabase extends Database {
 		);
 	}
 
+	public function getPostIdsWithBackup() {
+		return $this->wpdb->get_col( "SELECT post_id FROM $this->table");
+	}
+
 	public function deletePostContentBackup($post_id){
 		return $this->wpdb->delete(
 			$this->table,
@@ -56,4 +60,6 @@ class MigrationsDatabase extends Database {
 			 primary key (post_id)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 	}
+
+
 }

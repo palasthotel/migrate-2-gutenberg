@@ -118,12 +118,12 @@ class PostMigrationsTable extends WP_List_Table {
 				$previewUrl = PostMigrationPreview::getUrl($item->post_id);
 				echo "<a href='$previewUrl' target='_blank'>Preview</a><br/>";
 				if(is_string($content)){
-					$rollbackUrl = Plugin::instance()->actions->getRunRollbackUrl($item->post_id);
+					$rollbackUrl = Plugin::instance()->ajax->getRunRollbackUrl($item->post_id);
 					echo "<a href='$rollbackUrl' data-auto-reload-link target='_blank'>Rollback</a><br/>";
-					$updateUrl = Plugin::instance()->actions->getRunUpdateUrl($item->post_id);
+					$updateUrl = Plugin::instance()->ajax->getRunUpdateUrl($item->post_id);
 					echo "<a href='$updateUrl' data-auto-reload-link target='_blank'>Update transform</a>";
 				} else {
-					$transformUrl = Plugin::instance()->actions->getRunTransformationsUrl($item->post_id);
+					$transformUrl = Plugin::instance()->ajax->getRunTransformationsUrl($item->post_id);
 					echo "<a href='$transformUrl' data-auto-reload-link target='_blank'>Transform</a>";
 				}
 				echo "</p>";

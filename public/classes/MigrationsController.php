@@ -42,7 +42,7 @@ class MigrationsController extends Components\Component {
 	 *
 	 * @return string
 	 */
-	public function migrate($content){
+	public function migrate($content): string {
 		$migratedContent = $content;
 		foreach ($this->migrations as $migration){
 			$migratedContent = $migration->transform($migratedContent, true);
