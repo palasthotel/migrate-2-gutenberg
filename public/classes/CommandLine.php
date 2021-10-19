@@ -83,6 +83,7 @@ class CommandLine {
 				$response = $this->plugin->actions->migrate( $post_id );
 				if($response instanceof \WP_Error){
 					$errors++;
+					\WP_CLI::error( $response->get_error_message() );
 				}
 			} else {
 				$post_ids = $migration->postIds();
