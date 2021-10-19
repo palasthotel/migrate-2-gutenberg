@@ -5,6 +5,7 @@ namespace Palasthotel\WordPress\MigrateToGutenberg;
 
 
 use Palasthotel\WordPress\MigrateToGutenberg\Components\Component;
+use Palasthotel\WordPress\MigrateToGutenberg\Store\PostsDatabase;
 use WP_Error;
 use WP_Post;
 
@@ -13,7 +14,7 @@ class Actions extends Component {
 	/**
 	 * @param string|int|WP_Post $post
 	 *
-	 * @return int|WP_Error
+	 * @return int|bool|WP_Error
 	 */
 	public function migrate( $post ) {
 		$post            = get_post( $post );
@@ -26,25 +27,26 @@ class Actions extends Component {
 		}
 
 		$content = $this->plugin->dbMigrations->getPostContentBackup( $post->ID );
-
+		$isUpdate = false;
 		if(null === $content){
 			// new migration
 			$migratedContent = $this->plugin->migrationController->migrate( $post->post_content );
 			$this->plugin->dbMigrations->setPostContentBackup( $post->ID, $post->post_content );
-
-			return wp_update_post( [
-				"ID"           => $post->ID,
-				"post_content" => $migratedContent,
-			] );
+		} else {
+			// update migration
+			$migratedContent = $this->plugin->migrationController->migrate( $content );
+			$isUpdate = true;
 		}
 
-		// update migration
-		$migratedContent = $this->plugin->migrationController->migrate( $content );
-		return wp_update_post( [
-			"ID"           => $post->ID,
-			"post_content" => $migratedContent,
-		] );
+		$success = PostsDatabase::updatePost( $post->ID, $migratedContent );
 
+		if ( false === $success || (!$isUpdate && $success <= 0) ) {
+			return new \WP_Error(
+				500,
+				'Couldn’t update post: ' . $post->ID,
+			);
+		}
+		return true;
 	}
 
 	/**
@@ -72,12 +74,9 @@ class Actions extends Component {
 			);
 		}
 
-		$success =  wp_update_post([
-			"ID" => $post->ID,
-			"post_content" => $backup,
-		]);
+		$success = PostsDatabase::updatePost( $post->ID, $backup );
 
-		if(!($success instanceof WP_Error) && $success > 0){
+		if(!($success instanceof WP_Error) && false !== $success && $success > 0){
 			$this->plugin->dbMigrations->deletePostContentBackup($post->ID);
 		}
 
