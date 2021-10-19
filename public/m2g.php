@@ -37,6 +37,7 @@ class Plugin extends Components\Plugin {
 	const ACTION_REGISTER_MIGRATIONS = "m2g_register_migrations";
 
 	const FILTER_SHORTCODE_TRANSFORMATIONS = "m2g_shortcode_transformations";
+	const FILTER_BLOCK_TRANSFORMATIONS = "m2g_block_transformations";
 
 	function onCreate() {
 
