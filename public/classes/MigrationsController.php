@@ -6,18 +6,20 @@ namespace Palasthotel\WordPress\MigrateToGutenberg;
 
 use Palasthotel\WordPress\MigrateToGutenberg\Interfaces\Migration;
 use Palasthotel\WordPress\MigrateToGutenberg\Migrations\ShortcodesMigration;
+use Palasthotel\WordPress\MigrateToGutenberg\Migrations\BlocksMigration;
 
 class MigrationsController extends Components\Component {
 
 	/**
 	 * @var Migration[]
 	 */
-	private array $migrations = [];
+	private $migrations = [];
 
 	function onCreate() {
 		add_action("init", function(){
 			do_action(Plugin::ACTION_REGISTER_MIGRATIONS, $this);
 			$this->register(new ShortcodesMigration());
+			$this->register(new BlocksMigration());
 		});
 	}
 
