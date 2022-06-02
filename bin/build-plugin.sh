@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PLUGIN_SLUG="migrate-to-gutenberg"
+PLUGIN_SLUG="migrate-2-gutenberg"
 PROJECT_PATH=$(pwd)
 BUILD_PATH="${PROJECT_PATH}/build"
 DEST_PATH="$BUILD_PATH/$PLUGIN_SLUG"
