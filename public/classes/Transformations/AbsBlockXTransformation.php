@@ -13,9 +13,26 @@ abstract class AbsBlockXTransformation implements ShortcodeTransformation {
 
 	abstract function blockId(): BlockId;
 
+	/**
+	 * @param array $attrs shortcode attributes
+	 *
+	 * @return array block content
+	 */
+	function attributesToContent(array $attrs): array{
+		return $attrs;
+	}
+
+	function modifyBlockProps(array $blockAttributes): array {
+		return $blockAttributes;
+	}
+
 	function transform( $attrs, $content = "" ): string {
-		$content = ["content" => $attrs];
-		$json = json_encode($content, JSON_UNESCAPED_UNICODE);
+		$blockProps = $this->modifyBlockProps(
+			[
+				"content" => $this->attributesToContent($attrs)
+			]
+		);
+		$json = json_encode($blockProps, JSON_UNESCAPED_UNICODE);
 		$id = $this->blockId();
 		return "<!-- wp:$id $json /-->\n\n";
 	}
