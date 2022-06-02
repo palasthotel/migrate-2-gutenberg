@@ -68,6 +68,7 @@ class ShortcodesMigration implements Migration {
 		$query = "SELECT ID FROM " . $wpdb->posts . " WHERE 
 		(($likeTags) OR ( ID IN (SELECT post_id FROM $migrationsTable))) 
 		AND (post_status ='publish' or post_status ='private' or post_status ='draft' OR post_status = 'future')
+		ORDER BY post_date desc
 		";
 
 		return $wpdb->get_col( $query );

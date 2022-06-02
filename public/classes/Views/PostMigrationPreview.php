@@ -14,13 +14,17 @@ class PostMigrationPreview extends Component {
 	}
 
 	public static function getUrl($post_id){
-		return get_permalink($post_id)."?m2g_preview=true";
+		$permalink = get_permalink($post_id);
+		$connector = ! strpos( $permalink, "?" ) ? "?" : "&";
+		return "{$permalink}{$connector}m2g_preview=true";
 	}
 
 	public function the_content($content){
+
 		if(!isset($_GET["m2g_preview"]) || $_GET["m2g_preview"] !== "true" ){
 			return $content;
 		}
+
 		if(!current_user_can("edit_posts")){
 			return $content;
 		}

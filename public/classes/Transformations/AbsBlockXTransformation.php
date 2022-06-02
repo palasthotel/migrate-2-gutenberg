@@ -26,7 +26,14 @@ abstract class AbsBlockXTransformation implements ShortcodeTransformation {
 		return $blockAttributes;
 	}
 
-	function transform( $attrs, $content = "" ): string {
+	/**
+	 * @param string|array $attrs
+	 * @param string $content
+	 *
+	 * @return string
+	 */
+	function transform( $attrs, string $content = "" ): string {
+		$attrs = is_array($attrs) ? $attrs : [];
 		$blockProps = $this->modifyBlockProps(
 			[
 				"content" => $this->attributesToContent($attrs)
