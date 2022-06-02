@@ -55,11 +55,15 @@ class BlocksMigration implements Migration {
 			return "post_content LIKE '%<!-- wp:$blockName%' OR post_content LIKE '%<!-- /wp:$blockName%'";
 		}, $this->getBlocks() );
 
-		$likeTags = implode( " OR ", $blockNames );
+		$likeTagsString = "";
+		if(count($blockNames) > 0){
+			$likeTags = implode( " OR ", $blockNames );
+			$likeTagsString = "($likeTags) OR";
+		}
 
 		$migrationsTable = Plugin::instance()->dbMigrations->table;
 		$query = "SELECT ID FROM " . $wpdb->posts . " WHERE 
-		(($likeTags) OR ( ID IN (SELECT post_id FROM $migrationsTable))) 
+		( $likeTagsString ( ID IN (SELECT post_id FROM $migrationsTable))) 
 		AND (post_status ='publish' or post_status ='private' or post_status ='draft' OR post_status = 'future')
 		";
 

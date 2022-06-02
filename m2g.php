@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name:       Migrate to Gutenberg - DEV
+ * Plugin Name:       Migrate 2 Gutenberg - DEV
  * Description:       Dev inc file
  * Version:           X.X.X
  * Requires at least: X.X
