@@ -8,7 +8,7 @@ use Palasthotel\WordPress\MigrateToGutenberg\Store\MigrationsDatabase;
  * Plugin Name: Migrate 2 Gutenberg
  * Plugin URI: https://github.com/palasthotel/blockX
  * Description: Migrate pre Gutenberg contents to Gutenberg blocks
- * Version: 0.1.0
+ * Version: 0.1.1
  * Author: Palasthotel <rezeption@palasthotel.de> (in person: Edward Bock)
  * Author URI: http://www.palasthotel.de
  * Requires at least: 5.0

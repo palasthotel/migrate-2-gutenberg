@@ -21,7 +21,7 @@ class CaptionTransformation implements ShortcodeTransformation {
 		$id = apply_filters(Plugin::FILTER_ATTACHMENT_ID, $id);
 		$json = [
 			"id" => $id,
-			"sizeSlug" => "large",
+			"sizeSlug" => "full",
 			"linkDestination" => "none",
 		];
 		$attrJson = json_encode($json);
@@ -34,7 +34,7 @@ class CaptionTransformation implements ShortcodeTransformation {
 
 
 		return "<!-- wp:image $attrJson -->\n".
-		       "<figure class=\"wp-block-image size-large\"><img src=\"$imageUrl\" class=\"wp-image-$id\" />\n".
+		       "<figure class=\"wp-block-image size-full\"><img src=\"$imageUrl\" class=\"wp-image-$id\" />\n".
 		       "<figcaption>$caption</figcaption>".
 		       "</figure>\n".
 		       "<!-- /wp:image -->\n\n";

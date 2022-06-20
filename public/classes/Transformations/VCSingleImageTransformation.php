@@ -20,7 +20,7 @@ class VCSingleImageTransformation implements ShortcodeTransformation {
 			$id                            = apply_filters( Plugin::FILTER_ATTACHMENT_ID, $attrs['image'] );
 			$block_data                    = array();
 			$block_data['id']              = $id;
-			$block_data['sizeSlug']        = "large";
+			$block_data['sizeSlug']        = "full";
 			$block_data['linkDestination'] = "none";
 			if ( isset( $attrs['img_size'] ) ) {
 				$block_data['sizeSlug'] = $attrs['img_size'];
