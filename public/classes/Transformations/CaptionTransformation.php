@@ -30,7 +30,7 @@ class CaptionTransformation implements ShortcodeTransformation {
 		$caption = trim(substr($content, $closeTagPos+2));
 
 		//$attachment = wp_get_attachment_metadata($id);
-		$imageUrl = wp_get_attachment_image_url($id);
+		$imageUrl = wp_get_attachment_image_url($id, "full");
 
 
 		return "<!-- wp:image $attrJson -->\n".
