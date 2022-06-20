@@ -59,7 +59,7 @@ class CommandLine {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *   wp m2g migrate shortcodes --id=1 --migration=shortcodes
+	 *   wp m2g migrate --id=1 --migration=shortcodes
 	 *
 	 * @when after_wp_load
 	 */
