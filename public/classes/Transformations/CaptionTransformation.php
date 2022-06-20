@@ -5,6 +5,7 @@ namespace Palasthotel\WordPress\MigrateToGutenberg\Transformations;
 
 
 use Palasthotel\WordPress\MigrateToGutenberg\Interfaces\ShortcodeTransformation;
+use Palasthotel\WordPress\MigrateToGutenberg\Plugin;
 
 class CaptionTransformation implements ShortcodeTransformation {
 
@@ -14,14 +15,14 @@ class CaptionTransformation implements ShortcodeTransformation {
 
 	function transform($attrs, $content = ""): string {
 
-		if(empty($content)) return "";
+		if(empty($content) || empty($attrs["id"])) return "";
 
 		$id = intval(str_replace("attachment_", "", $attrs["id"]));
-		$attrs["id"] = $id;
-		$attrs["sizeSlug"] = "large";
+		$id = apply_filters(Plugin::FILTER_ATTACHMENT_ID, $id);
 		$json = [
-			"id" => intval(str_replace("attachment_", "", $attrs["id"])),
+			"id" => $id,
 			"sizeSlug" => "large",
+			"linkDestination" => "none",
 		];
 		$attrJson = json_encode($json);
 
@@ -29,7 +30,7 @@ class CaptionTransformation implements ShortcodeTransformation {
 		$caption = trim(substr($content, $closeTagPos+2));
 
 		//$attachment = wp_get_attachment_metadata($id);
-		$imageUrl = wp_get_attachment_url($id);
+		$imageUrl = wp_get_attachment_image_url($id);
 
 
 		return "<!-- wp:image $attrJson -->\n".

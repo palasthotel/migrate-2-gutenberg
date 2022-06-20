@@ -38,6 +38,8 @@ class Plugin extends Components\Plugin {
 	const FILTER_SHORTCODE_TRANSFORMATIONS = "m2g_shortcode_transformations";
 	const FILTER_BLOCK_TRANSFORMATIONS = "m2g_block_transformations";
 
+	const FILTER_ATTACHMENT_ID = "m2g_attachment_id";
+
 	function onCreate() {
 
 		$this->loadTextdomain( Plugin::DOMAIN, "languages" );
