@@ -13,10 +13,11 @@ class Actions extends Component {
 
 	/**
 	 * @param string|int|WP_Post $post
+	 * @param bool $update
 	 *
 	 * @return int|bool|WP_Error
 	 */
-	public function migrate( $post ) {
+	public function migrate( $post, $update = false ) {
 		$post            = get_post( $post );
 
 		if(!($post instanceof WP_Post)){
@@ -28,10 +29,14 @@ class Actions extends Component {
 
 		$content = $this->plugin->dbMigrations->getPostContentBackup( $post->ID );
 		$isUpdate = false;
+
 		if(null === $content){
 			// new migration
 			$migratedContent = $this->plugin->migrationController->migrate( $post->post_content );
 			$this->plugin->dbMigrations->setPostContentBackup( $post->ID, $post->post_content );
+		} else if( !$update ){
+			// no update please
+			return true;
 		} else {
 			// update migration
 			$migratedContent = $this->plugin->migrationController->migrate( $content );

@@ -53,7 +53,7 @@ class Ajax extends Components\Component {
 	public function run_transformations(){
 		$post = $this->securityCheck();
 
-		$response = $this->plugin->actions->migrate($post);
+		$response = $this->plugin->actions->migrate($post, true);
 
 		if($response instanceof \WP_Error){
 			wp_die($response);
@@ -67,7 +67,7 @@ class Ajax extends Components\Component {
 	public function run_update(){
 		$post = $this->securityCheck();
 
-		$response = $this->plugin->actions->migrate($post);
+		$response = $this->plugin->actions->migrate($post, true);
 
 		if($response instanceof \WP_Error){
 			wp_die($response);

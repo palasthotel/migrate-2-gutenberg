@@ -57,15 +57,19 @@ class CommandLine {
 	 * [--migration=<migration>]
 	 * : migration id
 	 *
+	 * [--scope=<new|full>]
+	 * : which scope to migrate. all contents or only new contents
+	 *
 	 * ## EXAMPLES
 	 *
-	 *   wp m2g migrate --id=1 --migration=shortcodes
+	 *   wp m2g migrate --id=1 --migration=shortcodes --scope=all
 	 *
 	 * @when after_wp_load
 	 */
 	public function migrate( $args, $assoc_args ) {
 		$post_id      = $this->getId( $assoc_args );
 		$migration_id = isset( $assoc_args["migration"] ) && ! empty( $assoc_args["migration"] ) ? $assoc_args["migration"] : null;
+		$scope = isset($assoc_args["scope"]) && $assoc_args["scope"] == "full" ? "full" : "new";
 
 		$migrations = $this->plugin->migrationController->getMigrations();
 
@@ -80,7 +84,7 @@ class CommandLine {
 			if ( null !== $post_id ) {
 				$count = 1;
 				\WP_CLI::line( "Migration " . $migration->id() . " is migrating $post_id." );
-				$response = $this->plugin->actions->migrate( $post_id );
+				$response = $this->plugin->actions->migrate( $post_id, true );
 				if($response instanceof \WP_Error){
 					$errors++;
 					\WP_CLI::error( $response->get_error_message() );
@@ -92,7 +96,7 @@ class CommandLine {
 				$progress = \WP_CLI\Utils\make_progress_bar( 'Starting ' . $migration->id(), $count );
 				$errors = 0;
 				foreach ( $post_ids as $post_id ) {
-					$response = $this->plugin->actions->migrate( $post_id );
+					$response = $this->plugin->actions->migrate( $post_id, $scope == "full" );
 					if($response instanceof \WP_Error){
 						$errors++;
 					}
