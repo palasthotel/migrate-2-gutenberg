@@ -14,6 +14,7 @@ use Palasthotel\WordPress\MigrateToGutenberg\Transformations\VCInnerColumnTransf
 use Palasthotel\WordPress\MigrateToGutenberg\Transformations\VCInnerRowTransformation;
 use Palasthotel\WordPress\MigrateToGutenberg\Transformations\VCRowTransformation;
 use Palasthotel\WordPress\MigrateToGutenberg\Transformations\VCSingleImageTransformation;
+use Palasthotel\WordPress\MigrateToGutenberg\Transformations\VCMasonryMediaGridTransformation;
 
 class ShortcodesMigration implements Migration {
 
@@ -168,6 +169,7 @@ class ShortcodesMigration implements Migration {
 				new VCInnerColumnTransformation(),
 				new VCSingleImageTransformation(),
 				new VCColumnTextTransformation(),
+				new VCMasonryMediaGridTransformation(),
 			] );
 		}
 
