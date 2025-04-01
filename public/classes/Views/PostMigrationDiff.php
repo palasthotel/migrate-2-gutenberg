@@ -29,7 +29,7 @@ class PostMigrationDiff extends Component {
 		$backupContent = $this->plugin->dbMigrations->getPostContentBackup($post->ID);
 		$content = is_string($backupContent) ? $backupContent : $post->post_content;
 
-		$migratedContent = $this->plugin->migrationController->migrate($content);
+		$migratedContent = $this->plugin->migrationController->migrate($content, $post);
 
 		echo "<div style='display: flex'>";
 		$style = "width: 50%; height: 90vh";

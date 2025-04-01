@@ -29,7 +29,9 @@ class PostMigrationPreview extends Component {
 			return $content;
 		}
 
-		return $this->plugin->migrationController->migrate($content);
+		$post = get_post();
+
+		return $this->plugin->migrationController->migrate($content, $post);
 	}
 
 }

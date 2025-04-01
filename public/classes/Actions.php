@@ -32,14 +32,14 @@ class Actions extends Component {
 
 		if(null === $content){
 			// new migration
-			$migratedContent = $this->plugin->migrationController->migrate( $post->post_content );
+			$migratedContent = $this->plugin->migrationController->migrate( $post->post_content, $post, false );
 			$this->plugin->dbMigrations->setPostContentBackup( $post->ID, $post->post_content );
 		} else if( !$update ){
 			// no update please
 			return true;
 		} else {
 			// update migration
-			$migratedContent = $this->plugin->migrationController->migrate( $content );
+			$migratedContent = $this->plugin->migrationController->migrate( $content, $post, false );
 			$isUpdate = true;
 		}
 
