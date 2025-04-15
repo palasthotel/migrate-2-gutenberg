@@ -67,7 +67,7 @@ class CommandLine {
 	 * @when after_wp_load
 	 */
 	public function migrate( $args, $assoc_args ) {
-		$post_id      = $this->getId( $assoc_args );
+		$given_post_id = $this->getId( $assoc_args );
 		$migration_id = isset( $assoc_args["migration"] ) && ! empty( $assoc_args["migration"] ) ? $assoc_args["migration"] : null;
 		$scope = isset($assoc_args["scope"]) && $assoc_args["scope"] == "full" ? "full" : "new";
 
@@ -81,10 +81,10 @@ class CommandLine {
 				continue;
 			}
 
-			if ( null !== $post_id ) {
+			if ( null !== $given_post_id ) {
 				$count = 1;
-				\WP_CLI::line( "Migration " . $migration->id() . " is migrating $post_id." );
-				$response = $this->plugin->actions->migrate( $post_id, true );
+				\WP_CLI::line( "Migration " . $migration->id() . " is migrating $given_post_id." );
+				$response = $this->plugin->actions->migrate( $given_post_id, true );
 				if($response instanceof \WP_Error){
 					$errors++;
 					\WP_CLI::error( $response->get_error_message() );
