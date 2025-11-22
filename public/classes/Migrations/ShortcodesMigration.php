@@ -161,13 +161,13 @@ class ShortcodesMigration implements Migration {
 	public function getShortcodes(): array {
 		if ( $this->shortcodes === null ) {
 			$this->shortcodes = apply_filters( Plugin::FILTER_SHORTCODE_TRANSFORMATIONS, [
-				new CaptionTransformation(),
-				new VCRowTransformation(),
-				new VCInnerRowTransformation(),
-				new VCColumnTransformation(),
 				new VCInnerColumnTransformation(),
+				new VCInnerRowTransformation(),
+				new CaptionTransformation(),
 				new VCSingleImageTransformation(),
 				new VCColumnTextTransformation(),
+				new VCRowTransformation(),
+				new VCColumnTransformation(),
 			] );
 		}
 

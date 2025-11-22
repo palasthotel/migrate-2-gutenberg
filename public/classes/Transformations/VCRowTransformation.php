@@ -14,20 +14,16 @@ class VCRowTransformation implements ShortcodeTransformation {
 
 	function transform($attrs, $content = ""): string {
 		if(
-			substr_count($content,"[vc_column]") > 1 ||
-			substr_count($content,"[vc_row_inner]") > 1 ||
-			substr_count($content,"[vc_column_inner]") > 1
+			str_starts_with( $content, "<!-- wp:column" )
 		){
 			return "<!-- wp:columns -->\n<div class=\"wp-block-columns\">$content</div>\n<!-- /wp:columns -->\n\n";
+		} else {
+			$group = '{"layout":"type":"constrained"}}';
+			return sprintf(
+				"<!-- wp:group %s -->\n<div class=\"wp-block-group\">%s</div>\n<!-- /wp:group -->\n\n",
+				$group,
+				$content
+			);
 		}
-		return str_replace(
-			[
-				"[vc_column]","[/vc_column]",
-				"[vc_row_inner]", "[/vc_row_inner]",
-				"[vc_column_inner]", "[/vc_column_inner]"
-			],
-			"",
-			$content
-		);
 	}
 }

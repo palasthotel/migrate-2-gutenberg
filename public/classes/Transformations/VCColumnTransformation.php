@@ -13,7 +13,14 @@ class VCColumnTransformation implements ShortcodeTransformation {
 	}
 
 	function transform($attrs, $content = ""): string {
-
-		return "<!-- wp:column -->\n<div class=\"wp-block-column\">$content</div>\n<!-- /wp:column -->\n\n";
+		if( substr_count($content,"[vc_column_inner]") > 1 ){
+			return "<!-- wp:columns -->\n<div class=\"wp-block-columns\">$content</div>\n<!-- /wp:columns -->\n\n";
+		}
+		$group = '{"layout":"type":"constrained"}}';
+		return sprintf(
+			"<!-- wp:group %s -->\n<div class=\"wp-block-group\">%s</div>\n<!-- /wp:group -->\n\n",
+			$group,
+			$content
+		);
 	}
 }
