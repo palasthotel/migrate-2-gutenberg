@@ -42,6 +42,23 @@ This migration path can be used for:
  - WPBakery Page Builder
 
 
+### Known limitations
+
+Checked in the block editor on WordPress 7.1.5 and 7.2-RC3 (same results on both):
+
+- `vc_column_text` wraps its content in one paragraph block. Content that already
+  holds block-level HTML (`<p>`, headings, lists - which is what WPBakery usually
+  stores) gives an invalid paragraph block the editor offers to repair.
+- `vc_single_image` with `add_caption="yes"` gives an invalid image block.
+- `vc_row` only becomes a columns block when it holds more than one `[vc_column]`
+  without attributes. Columns with attributes such as `width="1/2"` end up as column
+  blocks without a surrounding columns block.
+- Plain `vc_column_text`, `vc_single_image` without caption, `caption` and rows with
+  attribute-less columns or inner rows give valid blocks.
+
+Check posts with **Diff** and **Preview** before migrating them, and use your own
+transformations (below) where the built-in ones don't fit.
+
 ### Transformations
 
 The transformation of a shortcode to something different is handle by classes that implement the `ShortcodeTransformation` interface. Abstract class `AbsShortcodeTransformation` or `AbsBlockXTransformation` can be extended.
