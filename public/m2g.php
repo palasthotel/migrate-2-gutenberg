@@ -12,7 +12,7 @@ use Palasthotel\WordPress\MigrateToGutenberg\Store\MigrationsDatabase;
  * Author: Palasthotel <rezeption@palasthotel.de> (in person: Edward Bock)
  * Author URI: http://www.palasthotel.de
  * Requires at least: 5.0
- * Tested up to: 5.9.3
+ * Tested up to: 7.2
  * Requires PHP: 8.2
  * Text Domain: m2g
  * License: GPL-3.0-or-later

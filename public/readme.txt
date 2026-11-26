@@ -2,7 +2,7 @@
 Contributors: palasthotel
 Tags: gutenberg, migration, shortcodes, wpbakery, blocks
 Requires at least: 5.0
-Tested up to: 5.9.3
+Tested up to: 7.2
 Requires PHP: 8.2
 Stable tag: 0.1.3
 License: GPL-3.0-or-later
