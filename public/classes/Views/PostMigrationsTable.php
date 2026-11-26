@@ -32,10 +32,10 @@ class PostMigrationsTable extends WP_List_Table {
 	}
 
 	public function get_views() {
-		$baseUrl = remove_query_arg(["status", "post_id"],$_SERVER['REQUEST_URI']);
-		$allUrl = remove_query_arg("status",$baseUrl);
-		$pendingUrl = add_query_arg(["status" => "pending"], $allUrl);
-		$migratedUrl = add_query_arg(["status" => "migrated"], $allUrl);
+		$baseUrl = remove_query_arg(["status", "post_id"]);
+		$allUrl = esc_url(remove_query_arg("status",$baseUrl));
+		$pendingUrl = esc_url(add_query_arg(["status" => "pending"], $baseUrl));
+		$migratedUrl = esc_url(add_query_arg(["status" => "migrated"], $baseUrl));
 		$status = $this->getStatusFilter();
 		$classAll = $status === null ? "class='current'" : "";
 		$classPending = $status === "pending" ? "class='current'" : "";
@@ -65,22 +65,22 @@ class PostMigrationsTable extends WP_List_Table {
 	 * @param string $column_name
 	 */
 	protected function column_default( $item, $column_name ) {
-		$baseUrl = remove_query_arg(["status", "post_id"],$_SERVER['REQUEST_URI']);
+		$baseUrl = remove_query_arg(["status", "post_id"]);
 		switch ( $column_name ) {
 			case "post_id":
-				$url = get_edit_post_link($item->post_id);
-				echo "<a href='$url'>$item->post_id</a>";
+				$url = esc_url(get_edit_post_link($item->post_id));
+				echo "<a href='$url'>" . intval($item->post_id) . "</a>";
 				break;
 			case "post_title":
-				$url = get_permalink($item->post_id);
-				echo "<a href='$url'>".get_the_title($item->post_id)."</a>";
+				$url = esc_url(get_permalink($item->post_id));
+				echo "<a href='$url'>" . esc_html(get_the_title($item->post_id)) . "</a>";
 				break;
 			case "migrations":
 				echo "<ul>";
 				foreach ($item->migrations as $migration){
 
 					echo "<li>";
-					echo "<div><strong>".$migration->id()."</strong></div>";
+					echo "<div><strong>" . esc_html($migration->id()) . "</strong></div>";
 					echo "<div>";
 					$migration->analyze($item->post_id);
 					echo "</div>";
@@ -96,7 +96,7 @@ class PostMigrationsTable extends WP_List_Table {
 					if($filerIsActive){
 						echo "Migrated";
 					} else {
-						$url = add_query_arg(["status" => "migrated"],$baseUrl);
+						$url = esc_url(add_query_arg(["status" => "migrated"],$baseUrl));
 						echo "<a href='$url'>Migrated</a>";
 					}
 
@@ -104,7 +104,7 @@ class PostMigrationsTable extends WP_List_Table {
 					if($filerIsActive){
 						echo "Pending";
 					} else {
-						$url = add_query_arg(["status" => "pending"],$baseUrl);
+						$url = esc_url(add_query_arg(["status" => "pending"],$baseUrl));
 						echo "<a href='$url'>Pending</a>";
 					}
 				}
@@ -113,17 +113,17 @@ class PostMigrationsTable extends WP_List_Table {
 				$content = Plugin::instance()->dbMigrations->getPostContentBackup($item->post_id);
 				echo "<p style='line-height: 1.6rem; margin:0;' data-auto-reload-links>";
 
-				$diffUrl = PostMigrationDiff::getUrl($item->post_id);
+				$diffUrl = esc_url(PostMigrationDiff::getUrl($item->post_id));
 				echo "<a href='$diffUrl' target='_blank'>Diff</a><br/>";
-				$previewUrl = PostMigrationPreview::getUrl($item->post_id);
+				$previewUrl = esc_url(PostMigrationPreview::getUrl($item->post_id));
 				echo "<a href='$previewUrl' target='_blank'>Preview</a><br/>";
 				if(is_string($content)){
-					$rollbackUrl = Plugin::instance()->ajax->getRunRollbackUrl($item->post_id);
+					$rollbackUrl = esc_url(Plugin::instance()->ajax->getRunRollbackUrl($item->post_id));
 					echo "<a href='$rollbackUrl' data-auto-reload-link target='_blank'>Rollback</a><br/>";
-					$updateUrl = Plugin::instance()->ajax->getRunUpdateUrl($item->post_id);
+					$updateUrl = esc_url(Plugin::instance()->ajax->getRunUpdateUrl($item->post_id));
 					echo "<a href='$updateUrl' data-auto-reload-link target='_blank'>Update transform</a>";
 				} else {
-					$transformUrl = Plugin::instance()->ajax->getRunTransformationsUrl($item->post_id);
+					$transformUrl = esc_url(Plugin::instance()->ajax->getRunTransformationsUrl($item->post_id));
 					echo "<a href='$transformUrl' data-auto-reload-link target='_blank'>Transform</a>";
 				}
 				echo "</p>";
