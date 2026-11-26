@@ -1,5 +1,30 @@
-# Mitgrate to Gutenberg
+# Migrate 2 Gutenberg
+
 Migrate pre Gutenberg contents to Gutenberg blocks.
+
+## Installation
+
+The plugin is not on wordpress.org. Download `migrate-2-gutenberg.zip` from the
+[latest release](https://github.com/palasthotel/migrate-2-gutenberg/releases/latest)
+and upload it in Plugins → Add New → Upload Plugin.
+
+Requirements: WordPress 5.0 or newer, PHP 8.0 or newer.
+
+The overview is in Tools → Migrate to Gutenberg (capability `manage_options`).
+Every migrated post gets a backup of its previous content, which the rollback
+restores. Check a few posts with **Diff** and **Preview** before migrating
+everything.
+
+### WP-CLI
+
+```sh
+wp m2g stats                                  # affected posts per migration
+wp m2g migrate                                # migrate posts not migrated yet
+wp m2g migrate --scope=full                   # migrate again from the backups
+wp m2g migrate --id=123 --migration=shortcodes
+wp m2g rollback                               # restore every backup
+wp m2g rollback --id=123
+```
 
 ## Features
 
@@ -89,3 +114,30 @@ add_filter(\Palasthotel\WordPress\MigrateToGutenberg\Plugin::FILTER_SHORTCODE_TR
     );
 });
 ```
+
+## Development
+
+`public/` is the plugin as it ships. The `m2g.php` in the repository root is a
+development wrapper (`Migrate 2 Gutenberg - DEV`, version `X.X.X`): symlink or clone
+the whole repository into `wp-content/plugins/` and activate that entry. It never
+ships. There is no build step and no `vendor/`: `public/m2g.php` registers its own
+PSR-4 autoloader for `classes/`.
+
+Pull requests run `php -l` on PHP 8.0 to 8.5 and pack the plugin as a release would
+(shared workflows of [palasthotel/github-workflows](https://github.com/palasthotel/github-workflows)).
+To pack locally next to a checkout of that repository:
+
+```sh
+SLUG=migrate-2-gutenberg bash ../github-workflows/wp-plugin/bin/pack.sh
+```
+
+## Releases
+
+Versions and the changelog come from [release-please](https://github.com/googleapis/release-please)
+and conventional commits - see [CONTRIBUTING.md](CONTRIBUTING.md). Merging the
+release PR tags `vX.Y.Z`; the tag gets `migrate-2-gutenberg.zip` attached to its
+GitHub release.
+
+## License
+
+See [LICENSE](LICENSE).
