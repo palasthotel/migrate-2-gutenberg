@@ -140,4 +140,5 @@ GitHub release.
 
 ## License
 
-See [LICENSE](LICENSE).
+GPL-3.0-or-later, see [LICENSE](LICENSE). Versions up to 0.1.3 were published
+with a GPLv2 header and stay available under those terms.
