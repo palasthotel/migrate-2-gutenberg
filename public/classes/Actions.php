@@ -32,8 +32,16 @@ class Actions extends Component {
 
 		if(null === $content){
 			// new migration
-			$migratedContent = $this->plugin->migrationController->migrate( $post->post_content, $post, false );
+			// Without a complete backup there is no way back: don't touch the post.
 			$this->plugin->dbMigrations->setPostContentBackup( $post->ID, $post->post_content );
+			if ( $this->plugin->dbMigrations->getPostContentBackup( $post->ID ) !== $post->post_content ) {
+				$this->plugin->dbMigrations->deletePostContentBackup( $post->ID );
+				return new WP_Error(
+					500,
+					'Couldn’t store a complete backup of post ' . $post->ID . ', the post was not migrated.'
+				);
+			}
+			$migratedContent = $this->plugin->migrationController->migrate( $post->post_content, $post, false );
 		} else if( !$update ){
 			// no update please
 			return true;

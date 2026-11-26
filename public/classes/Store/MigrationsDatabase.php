@@ -9,6 +9,9 @@ use Palasthotel\WordPress\MigrateToGutenberg\Components\Database;
  * @property string table
  */
 class MigrationsDatabase extends Database {
+	const SCHEMA_VERSION = "2";
+	const OPTION_SCHEMA_VERSION = "m2g_schema_version";
+
 	public $table;
 
 	function init() {
@@ -54,13 +57,21 @@ class MigrationsDatabase extends Database {
 
 	public function createTables() {
 		parent::createTables();
-		dbDelta("CREATE TABLE IF NOT EXISTS $this->table
-			(
-			 post_id bigint(20) unsigned NOT NULL,
-			 post_content_backup TEXT,
-			 primary key (post_id)
+		// The format is the one dbDelta() can compare with an existing table, so a
+		// changed column is altered in place. LONGTEXT like wp_posts.post_content:
+		// a backup has to hold every post that can be migrated.
+		dbDelta("CREATE TABLE $this->table (
+			post_id bigint(20) unsigned NOT NULL,
+			post_content_backup longtext,
+			PRIMARY KEY  (post_id)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+		update_option(self::OPTION_SCHEMA_VERSION, self::SCHEMA_VERSION);
 	}
 
+	public function updateTablesIfNeeded() {
+		if ( get_option(self::OPTION_SCHEMA_VERSION) !== self::SCHEMA_VERSION ) {
+			$this->createTables();
+		}
+	}
 
 }

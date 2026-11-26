@@ -63,6 +63,8 @@ class Plugin extends Components\Plugin {
 
 		if ( WP_DEBUG ) {
 			$this->dbMigrations->createTables();
+		} else {
+			add_action( 'admin_init', [ $this->dbMigrations, 'updateTablesIfNeeded' ] );
 		}
 	}
 
