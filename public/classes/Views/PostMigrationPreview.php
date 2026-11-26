@@ -25,11 +25,11 @@ class PostMigrationPreview extends Component {
 			return $content;
 		}
 
-		if(!current_user_can("edit_posts")){
+		$post = get_post();
+
+		if(!($post instanceof \WP_Post) || !current_user_can("edit_post", $post->ID)){
 			return $content;
 		}
-
-		$post = get_post();
 
 		return $this->plugin->migrationController->migrate($content, $post);
 	}

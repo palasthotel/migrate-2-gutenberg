@@ -1,0 +1,54 @@
+name: Attach the plugin zip to the release
+
+# The plugin is not on wordpress.org: the release tag release-please pushes gets the
+# packed plugin as migrate-2-gutenberg.zip on its GitHub release - the same payload
+# the PR check packs.
+
+on:
+  push:
+    tags:
+      - "v*"
+  # Re-attach the zip of an existing release, e.g. after a failed run
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version whose release gets the zip, without the leading v (e.g. 0.1.4)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      SLUG: migrate-2-gutenberg
+      VERSION: ${{ github.event.inputs.version || github.ref_name }}
+      TOOLS: ${{ github.workspace }}/.github-workflows/wp-plugin/bin
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.inputs.version && format('v{0}', github.event.inputs.version) || github.ref }}
+
+      - name: Check out the release scripts
+        uses: actions/checkout@v7
+        with:
+          repository: palasthotel/github-workflows
+          ref: v1
+          path: .github-workflows
+
+      - name: Check version numbers
+        run: |
+          export VERSION="${VERSION#v}"
+          bash "$TOOLS/check-version.sh"
+
+      - name: Pack
+        run: bash "$TOOLS/pack.sh"
+
+      - name: Attach the zip to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "v${VERSION#v}" "$SLUG.zip" --clobber

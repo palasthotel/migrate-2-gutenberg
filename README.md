@@ -1,5 +1,30 @@
-# Mitgrate to Gutenberg
+# Migrate 2 Gutenberg
+
 Migrate pre Gutenberg contents to Gutenberg blocks.
+
+## Installation
+
+The plugin is not on wordpress.org. Download `migrate-2-gutenberg.zip` from the
+[latest release](https://github.com/palasthotel/migrate-2-gutenberg/releases/latest)
+and upload it in Plugins → Add New → Upload Plugin.
+
+Requirements: WordPress 5.0 or newer, PHP 8.2 or newer.
+
+The overview is in Tools → Migrate to Gutenberg (capability `manage_options`).
+Every migrated post gets a backup of its previous content, which the rollback
+restores. Check a few posts with **Diff** and **Preview** before migrating
+everything.
+
+### WP-CLI
+
+```sh
+wp m2g stats                                  # affected posts per migration
+wp m2g migrate                                # migrate posts not migrated yet
+wp m2g migrate --scope=full                   # migrate again from the backups
+wp m2g migrate --id=123 --migration=shortcodes
+wp m2g rollback                               # restore every backup
+wp m2g rollback --id=123
+```
 
 ## Features
 
@@ -16,6 +41,23 @@ This migration path can be used for:
 
  - WPBakery Page Builder
 
+
+### Known limitations
+
+Checked in the block editor on WordPress 7.1.5 and 7.2-RC3 (same results on both):
+
+- `vc_column_text` wraps its content in one paragraph block. Content that already
+  holds block-level HTML (`<p>`, headings, lists - which is what WPBakery usually
+  stores) gives an invalid paragraph block the editor offers to repair.
+- `vc_single_image` with `add_caption="yes"` gives an invalid image block.
+- `vc_row` only becomes a columns block when it holds more than one `[vc_column]`
+  without attributes. Columns with attributes such as `width="1/2"` end up as column
+  blocks without a surrounding columns block.
+- Plain `vc_column_text`, `vc_single_image` without caption, `caption` and rows with
+  attribute-less columns or inner rows give valid blocks.
+
+Check posts with **Diff** and **Preview** before migrating them, and use your own
+transformations (below) where the built-in ones don't fit.
 
 ### Transformations
 
@@ -89,3 +131,31 @@ add_filter(\Palasthotel\WordPress\MigrateToGutenberg\Plugin::FILTER_SHORTCODE_TR
     );
 });
 ```
+
+## Development
+
+`public/` is the plugin as it ships. The `m2g.php` in the repository root is a
+development wrapper (`Migrate 2 Gutenberg - DEV`, version `X.X.X`): symlink or clone
+the whole repository into `wp-content/plugins/` and activate that entry. It never
+ships. There is no build step and no `vendor/`: `public/m2g.php` registers its own
+PSR-4 autoloader for `classes/`.
+
+Pull requests run `php -l` on PHP 8.2 to 8.5 and pack the plugin as a release would
+(shared workflows of [palasthotel/github-workflows](https://github.com/palasthotel/github-workflows)).
+To pack locally next to a checkout of that repository:
+
+```sh
+SLUG=migrate-2-gutenberg bash ../github-workflows/wp-plugin/bin/pack.sh
+```
+
+## Releases
+
+Versions and the changelog come from [release-please](https://github.com/googleapis/release-please)
+and conventional commits - see [CONTRIBUTING.md](CONTRIBUTING.md). Merging the
+release PR tags `vX.Y.Z`; the tag gets `migrate-2-gutenberg.zip` attached to its
+GitHub release.
+
+## License
+
+GPL-3.0-or-later, see [LICENSE](LICENSE). Versions up to 0.1.3 were published
+with a GPLv2 header and stay available under those terms.
