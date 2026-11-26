@@ -1,9 +1,0 @@
-{
-  "name": "palasthotel/migrate-to-gutenberg",
-  "description": "Migrate pre Gutenberg contents to gutenberg blocks",
-  "autoload": {
-    "psr-4": {
-      "Palasthotel\\WordPress\\MigrateToGutenberg\\": "classes"
-    }
-  }
-}

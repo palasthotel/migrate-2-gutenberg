@@ -6,13 +6,14 @@ use Palasthotel\WordPress\MigrateToGutenberg\Store\MigrationsDatabase;
 
 /**
  * Plugin Name: Migrate 2 Gutenberg
- * Plugin URI: https://github.com/palasthotel/blockX
+ * Plugin URI: https://github.com/palasthotel/migrate-2-gutenberg
  * Description: Migrate pre Gutenberg contents to Gutenberg blocks
  * Version: 0.1.3
  * Author: Palasthotel <rezeption@palasthotel.de> (in person: Edward Bock)
  * Author URI: http://www.palasthotel.de
  * Requires at least: 5.0
  * Tested up to: 5.9.3
+ * Requires PHP: 8.0
  * Text Domain: m2g
  * License: http://www.gnu.org/licenses/gpl-2.0.html GPLv2
  * @copyright Copyright (c) 2022, Palasthotel
@@ -20,7 +21,17 @@ use Palasthotel\WordPress\MigrateToGutenberg\Store\MigrationsDatabase;
  *
  */
 
-require_once dirname( __FILE__ ) . "/vendor/autoload.php";
+// PSR-4 for this plugin's own classes - it has no dependencies, so it needs no vendor/
+spl_autoload_register( function ( $class ) {
+	$prefix = __NAMESPACE__ . "\\";
+	if ( strncmp( $class, $prefix, strlen( $prefix ) ) !== 0 ) {
+		return;
+	}
+	$file = __DIR__ . "/classes/" . str_replace( "\\", "/", substr( $class, strlen( $prefix ) ) ) . ".php";
+	if ( is_file( $file ) ) {
+		require_once $file;
+	}
+} );
 
 /**
  * @property Menu menu
