@@ -13,7 +13,7 @@ use Palasthotel\WordPress\MigrateToGutenberg\Store\MigrationsDatabase;
  * Author URI: http://www.palasthotel.de
  * Requires at least: 5.0
  * Tested up to: 5.9.3
- * Requires PHP: 8.0
+ * Requires PHP: 8.2
  * Text Domain: m2g
  * License: GPL-3.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html

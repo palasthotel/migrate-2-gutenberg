@@ -8,7 +8,7 @@ The plugin is not on wordpress.org. Download `migrate-2-gutenberg.zip` from the
 [latest release](https://github.com/palasthotel/migrate-2-gutenberg/releases/latest)
 and upload it in Plugins → Add New → Upload Plugin.
 
-Requirements: WordPress 5.0 or newer, PHP 8.0 or newer.
+Requirements: WordPress 5.0 or newer, PHP 8.2 or newer.
 
 The overview is in Tools → Migrate to Gutenberg (capability `manage_options`).
 Every migrated post gets a backup of its previous content, which the rollback
@@ -123,7 +123,7 @@ the whole repository into `wp-content/plugins/` and activate that entry. It neve
 ships. There is no build step and no `vendor/`: `public/m2g.php` registers its own
 PSR-4 autoloader for `classes/`.
 
-Pull requests run `php -l` on PHP 8.0 to 8.5 and pack the plugin as a release would
+Pull requests run `php -l` on PHP 8.2 to 8.5 and pack the plugin as a release would
 (shared workflows of [palasthotel/github-workflows](https://github.com/palasthotel/github-workflows)).
 To pack locally next to a checkout of that repository:
 

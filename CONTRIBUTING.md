@@ -52,8 +52,8 @@ hooks against the file WordPress knows about.
 
 ## Checks
 
-Every pull request runs `php -l` on PHP 8.0 to 8.5 (the plugin declares
-`Requires PHP: 8.0`), packs the plugin and checks the payload. If you raise the PHP
+Every pull request runs `php -l` on PHP 8.2 to 8.5 (the plugin declares
+`Requires PHP: 8.2`), packs the plugin and checks the payload. If you raise the PHP
 requirement, change the plugin header, `public/readme.txt` and the `php-versions` in
 `.github/workflows/pr.yml` in the same pull request.
 
