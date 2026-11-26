@@ -1,0 +1,10 @@
+# Packed by the release pipeline (github-workflows/wp-plugin/bin/pack.sh)
+/build
+/*.zip
+
+# Generated if someone still runs composer in the payload
+/public/vendor
+
+.DS_Store
+.idea/
+.vscode/
