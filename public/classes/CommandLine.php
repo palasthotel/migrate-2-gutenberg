@@ -84,7 +84,7 @@ class CommandLine {
 			}
 
 			if ( null !== $given_post_id ) {
-				$count = 1;
+				$count++;
 				\WP_CLI::line( "Migration " . $migration->id() . " is migrating $given_post_id." );
 				$response = $this->plugin->actions->migrate( $given_post_id, true );
 				if($response instanceof \WP_Error){
@@ -93,10 +93,9 @@ class CommandLine {
 				}
 			} else {
 				$post_ids = $migration->postIds();
-				$count    = count( $post_ids );
-				\WP_CLI::line( "Migration " . $migration->id() . " is migrating $count posts." );
-				$progress = \WP_CLI\Utils\make_progress_bar( 'Starting ' . $migration->id(), $count );
-				$errors = 0;
+				$count   += count( $post_ids );
+				\WP_CLI::line( "Migration " . $migration->id() . " is migrating " . count( $post_ids ) . " posts." );
+				$progress = \WP_CLI\Utils\make_progress_bar( 'Starting ' . $migration->id(), count( $post_ids ) );
 				foreach ( $post_ids as $post_id ) {
 					$response = $this->plugin->actions->migrate( $post_id, $scope == "full" );
 					if($response instanceof \WP_Error){
