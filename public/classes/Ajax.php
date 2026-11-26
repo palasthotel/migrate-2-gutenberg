@@ -20,38 +20,56 @@ class Ajax extends Components\Component {
 	}
 
 	public function getRunTransformationsUrl($post_id){
-		return admin_url("/admin-ajax.php?post_id=$post_id&action=".self::RUN_TRANSFORMATIONS);
+		return $this->getActionUrl(self::RUN_TRANSFORMATIONS, $post_id);
 	}
 
 	public function getRunRollbackUrl($post_id){
-		return admin_url("/admin-ajax.php?post_id=$post_id&action=".self::RUN_ROLLBACK);
+		return $this->getActionUrl(self::RUN_ROLLBACK, $post_id);
 	}
 
 	public function getRunUpdateUrl($post_id){
-		return admin_url("/admin-ajax.php?post_id=$post_id&action=".self::RUN_UPDATE);
+		return $this->getActionUrl(self::RUN_UPDATE, $post_id);
+	}
+
+	private function getActionUrl(string $action, $post_id): string {
+		$post_id = intval($post_id);
+		return add_query_arg(
+			[
+				"action"   => $action,
+				"post_id"  => $post_id,
+				"_wpnonce" => wp_create_nonce(self::nonceAction($action, $post_id)),
+			],
+			admin_url("admin-ajax.php")
+		);
+	}
+
+	public static function nonceAction(string $action, int $post_id): string {
+		return "m2g_{$action}_{$post_id}";
 	}
 
 	/**
 	 * @return WP_Post
 	 */
-	private function securityCheck(): WP_Post {
+	private function securityCheck(string $action): WP_Post {
 		if(!isset($_GET["post_id"])){
 			exit;
 		}
 		$postId = intval($_GET["post_id"]);
+		check_admin_referer(self::nonceAction($action, $postId));
+
 		$post = get_post($postId);
 		if(!($post instanceof WP_Post)){
 			exit;
 		}
 
-		if(!current_user_can("edit_posts")){
-			exit;
+		if(!current_user_can("manage_options") || !current_user_can("edit_post", $post->ID)){
+			wp_die(esc_html__("Sorry, you are not allowed to migrate this post.", Plugin::DOMAIN), 403);
 		}
 		return $post;
 	}
 
 	public function run_transformations(){
-		$post = $this->securityCheck();
+		$post = $this->securityCheck(self::RUN_TRANSFORMATIONS);
 
 		$response = $this->plugin->actions->migrate($post, true);
 
@@ -65,7 +83,7 @@ class Ajax extends Components\Component {
 	}
 
 	public function run_update(){
-		$post = $this->securityCheck();
+		$post = $this->securityCheck(self::RUN_UPDATE);
 
 		$response = $this->plugin->actions->migrate($post, true);
 
@@ -79,7 +97,7 @@ class Ajax extends Components\Component {
 	}
 
 	public function run_rollback(){
-		$post = $this->securityCheck();
+		$post = $this->securityCheck(self::RUN_ROLLBACK);
 
 
 		$success = $this->plugin->actions->rollback($post);
